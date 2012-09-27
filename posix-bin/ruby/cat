@@ -1,0 +1,27 @@
+#!/usr/bin/env ruby
+STDIN.binmode
+STDOUT.binmode
+
+buffer_size = 1024
+
+require 'optparse'
+opt = OptionParser.new
+opt.on('-u'){ |dummy|
+  buffer_size = 1
+  puts buffer_size
+}
+files = opt.parse(ARGV)
+files = files.length == 0 ? ['-'] : files
+streams = files.map {|file|
+  file == '-' ? STDIN : open(file)
+}
+streams.each{ |stream|
+  while true
+    bytes = stream.read(buffer_size)
+    if ! bytes || bytes.length == 0 
+      break
+    end
+    STDOUT.write(bytes)
+  end
+}
+
