@@ -2,12 +2,10 @@
 STDIN.binmode
 STDOUT.binmode
 
-buffer_size = 1024
-
 require 'optparse'
 opt = OptionParser.new
 opt.on('-u'){ |dummy|
-  buffer_size = 1
+  IO.setvbuf(IO::NBF, STDOUT)
 }
 files = opt.parse(ARGV)
 files = files.length == 0 ? ['-'] : files
@@ -15,8 +13,8 @@ streams = files.map {|file|
   file == '-' ? STDIN : open(file)
 }
 streams.each{ |stream|
-  while bytes = stream.read(buffer.size)
-    STDOUT.write(bytes)
+  while byte = stream.getc()
+    STDOUT.putc byte
   end
 }
 
