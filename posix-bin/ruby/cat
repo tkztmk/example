@@ -5,15 +5,15 @@ STDOUT.binmode
 require 'optparse'
 opt = OptionParser.new
 opt.on('-u'){ |dummy|
-  IO.setvbuf(IO::NBF, STDOUT)
+  IO.setvbuf IO::NBF, STDOUT
 }
-files = opt.parse(ARGV)
+files = opt.parse ARGV
 files = files.length == 0 ? ['-'] : files
 streams = files.map {|file|
   file == '-' ? STDIN : open(file)
 }
 streams.each{ |stream|
-  while byte = stream.getc()
+  while byte = stream.getc
     STDOUT.putc byte
   end
 }
