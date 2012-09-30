@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+# `echo` should not use optparse. 
+nflag = false
+strs = ARGV.map {|arg| arg.dup}
+last_str = ''
+ecindex = nil
+strs = strs.take_while{|str|
+  ecindex = str.index '\c'
+  last_str = ecindex ? str : last_str
+  ! ecindex
+}
+strs.push ecindex ? last_str[0, ecindex] : (last_str + "\n")
+
+STDOUT.write strs * ' '
+
