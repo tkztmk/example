@@ -2,6 +2,10 @@
 # `echo` should not use optparse. 
 nflag = false
 strs = ARGV.map {|arg| arg.dup}
+if strs.first == '-n'
+  strs = strs.drop 1
+  nflag = true
+end
 last_str = ''
 ecindex = nil
 strs = strs.take_while{|str|
@@ -9,7 +13,7 @@ strs = strs.take_while{|str|
   last_str = ecindex ? str : last_str
   ! ecindex
 }
-strs.push ecindex ? last_str[0, ecindex] : (last_str + "\n")
+strs.push ecindex ? last_str[0, ecindex] : (last_str + (nflag ? '' : "\n"))
 
 STDOUT.write strs * ' '
 
